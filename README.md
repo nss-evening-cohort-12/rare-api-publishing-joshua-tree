@@ -1,1 +1,1 @@
-Rare API 🚀
+# Rare API 🚀
