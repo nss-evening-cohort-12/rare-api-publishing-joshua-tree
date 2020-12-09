@@ -4,7 +4,11 @@
         {
             "previewLimit": 50,
             "driver": "SQLite",
+<<<<<<< HEAD
             "name": "django",
+=======
+            "name": "rare",
+>>>>>>> 628ac3bf843b71371d2a95aa06d75d64814ac3c1
             "database": "db.sqlite3"
         }
     ]
