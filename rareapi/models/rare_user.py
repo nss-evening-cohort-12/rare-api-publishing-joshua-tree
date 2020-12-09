@@ -4,7 +4,6 @@ from django.db.models.deletion import CASCADE
 
 class RareUser(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=CASCADE)
-    bio = models.TextField()
+    bio = models.CharField(max_length=500)
+    display_name = models.CharField(max_length=25, null=True)
     profile_image_url = models.ImageField(blank=True)
-    created_on = models.DateField()
-    active = models.BooleanField()
