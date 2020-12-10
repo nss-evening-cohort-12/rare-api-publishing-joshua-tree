@@ -1,20 +1,20 @@
 [
-    {
-        "model": "auth.user",
-        "pk": 1,
-        "fields": {
-            "password": "password",
-            "last_login": null,
-            "is_superuser": false,
-            "username": "JoshuaTree",
-            "first_name": "Joshua",
-            "last_name": "Tree",
-            "email": "me@me.com",
-            "is_staff": false,
-            "is_active": true,
-            "date_joined": "2020-11-28T14:51:39.989Z",
-            "groups": [],
-            "user_permissions": []
-        }
-    }
+  {
+      "model": "auth.user",
+      "pk": 1,
+      "fields": {
+          "password": "password",
+          "last_login": null,
+          "is_superuser": false,
+          "username": "JoshuaTree",
+          "first_name": "Joshua",
+          "last_name": "Tree",
+          "email": "me@me.com",
+          "is_staff": false,
+          "is_active": true,
+          "date_joined": "2020-11-28T14:51:39.989Z",
+          "groups": [],
+          "user_permissions": []
+      }
+  }
 ]

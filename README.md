@@ -1,1 +1,1 @@
-# rare-api-publishing-joshua-tree
+# Rare API 🚀

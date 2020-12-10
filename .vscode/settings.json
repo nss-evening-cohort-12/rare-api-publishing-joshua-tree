@@ -5,8 +5,8 @@
         {
             "previewLimit": 50,
             "driver": "SQLite",
-            "name": "Rare API",
-            "database": "${workspaceFolder:rare}/db.sqlite3"
+            "name": "Rare",
+            "database": "db.sqlite3"
         }
     ]
 }
