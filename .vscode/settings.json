@@ -1,14 +1,11 @@
 {
     "python.linting.pylintEnabled": true,
+    "python.pythonPath": "/Users/RyanBeiden/.local/share/virtualenvs/rare-A4UsOGCg/bin/python",
     "sqltools.connections": [
         {
             "previewLimit": 50,
             "driver": "SQLite",
-<<<<<<< HEAD
-            "name": "django",
-=======
-            "name": "rare",
->>>>>>> 628ac3bf843b71371d2a95aa06d75d64814ac3c1
+            "name": "Rare",
             "database": "db.sqlite3"
         }
     ]
