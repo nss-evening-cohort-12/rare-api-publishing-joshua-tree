@@ -1,8 +1,9 @@
 import json
 from django.http import HttpResponse
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
+from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from rareapi.models import RareUser
 
@@ -58,7 +59,7 @@ def register_user(request):
         last_name=req_body['last_name']
     )
 
-    # Now save the extra info in the levelupapi_gamer table
+    # Now save the extra info in the rareapi_rareuser table
     rare_user = RareUser.objects.create(
         user=new_user
     )
@@ -72,3 +73,8 @@ def register_user(request):
     # Return the token to the client
     data = json.dumps({"token": token.key})
     return HttpResponse(data, content_type='application/json')
+
+@csrf_exempt
+def logout_view(request):
+    logout(request)
+    return redirect ('login')
