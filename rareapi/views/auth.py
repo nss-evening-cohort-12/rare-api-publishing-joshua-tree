@@ -65,10 +65,3 @@ def register_user(request):
     # Return the token to the client
     data = json.dumps({"token": token.key})
     return HttpResponse(data, content_type='application/json')
-
-# @csrf_exempt
-# def logout_view(request):
-#     logout(request)
-#     return HttpResponse()
-#     return redirect('/admin')
-#     redirect('login')
