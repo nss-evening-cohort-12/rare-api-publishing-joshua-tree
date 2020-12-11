@@ -3,19 +3,13 @@ from django.http import HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
-from django.shortcuts import redirect
+# from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from rareapi.models import RareUser
 
 
 @csrf_exempt
 def login_user(request):
-    '''Handles the authentication of a gamer
-
-    Method arguments:
-      request -- The full HTTP request object
-    '''
-
     req_body = json.loads(request.body.decode())
 
     # If the request is a HTTP POST, try to pull out the relevant information.
@@ -40,28 +34,26 @@ def login_user(request):
 
 @csrf_exempt
 def register_user(request):
-    '''Handles the creation of a new gamer for authentication
-
-    Method arguments:
-      request -- The full HTTP request object
-    '''
-
     # Load the JSON string of the request body into a dict
     req_body = json.loads(request.body.decode())
-
+    
     # Create a new user by invoking the `create_user` helper method
     # on Django's built-in User model
     new_user = User.objects.create_user(
-        username=req_body['username'],
-        email=req_body['email'],
-        password=req_body['password'],
         first_name=req_body['first_name'],
-        last_name=req_body['last_name']
+        last_name=req_body['last_name'],
+        email=req_body['email'],
+        username=req_body['username'],
+        password=req_body['password'],
+        is_staff=req_body['is_staff'],
     )
 
     # Now save the extra info in the rareapi_rareuser table
     rare_user = RareUser.objects.create(
-        user=new_user
+        user=new_user,
+        bio=req_body['bio'],
+        display_name=req_body['display_name'],
+        profile_image_url=req_body['profile_image_url']
     )
 
     # Commit the user to the database by saving it
@@ -74,7 +66,9 @@ def register_user(request):
     data = json.dumps({"token": token.key})
     return HttpResponse(data, content_type='application/json')
 
-@csrf_exempt
-def logout_view(request):
-    logout(request)
-    return redirect ('login')
+# @csrf_exempt
+# def logout_view(request):
+#     logout(request)
+#     return HttpResponse()
+#     return redirect('/admin')
+#     redirect('login')
