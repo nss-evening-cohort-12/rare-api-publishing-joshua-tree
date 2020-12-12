@@ -4,13 +4,14 @@ from django.contrib import admin
 from rareapi.views import login_user, register_user
 from django.conf.urls import include
 from rest_framework import routers
-from rareapi.views import CategoriesViewSet, Tags, PostsViewSet
+from rareapi.views import CategoriesViewSet, Tags, PostsViewSet, UsersViewSet
 
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'categories', CategoriesViewSet, 'category')
 router.register(r'tags', Tags, 'tag')
 router.register(r'posts', PostsViewSet, 'post')
+router.register(r'users', UsersViewSet, 'user')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
