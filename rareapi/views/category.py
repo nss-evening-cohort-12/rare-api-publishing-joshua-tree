@@ -30,7 +30,7 @@ class CategoriesViewSet(ViewSet):
       Response -- JSON serialized list of categories
     """
 
-    categories = Category.objects.all()
+    categories = Category.objects.all().order_by('label')
 
     # Note the addtional `many=True` argument to the
     # serializer. It's needed when you are serializing
