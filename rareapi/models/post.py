@@ -10,7 +10,7 @@ class Post(models.Model):
     image_url = models.ImageField(blank=True)
     content = models.CharField(max_length=2000)
     approved = models.BooleanField()
-    rare_user = models.ForeignKey("RareUser", 
+    rare_user = models.ForeignKey(settings.AUTH_USER_MODEL, 
         on_delete=CASCADE,
         related_name="posts",
         related_query_name="post"

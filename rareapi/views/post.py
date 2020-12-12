@@ -5,13 +5,36 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rareapi.models import Post
 
-class PostViewSet(ViewSet):
+class PostSerializer(serializers.ModelSerializer):
+    # JSON Serializer for Post
+    
+    class Meta:
+        model = Post
+        fields = ['id', 'url', 'title', 'publication_date', 'image_url', 'content', 'approved', 'rare_user', 'category']
 
-    def get_queryset(self):
-        all_posts = Post.objects.all()
+class PostsViewSet(ViewSet):
+
+    def retrieve(self, request, pk=None):
+        # Get posts by pk (this is necessary for HyperLinkedSerializers)
+
+        try:
+            post = Post.objects.get(pk=pk)
+            serializer = PostSerializer(post, context={'request': request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
+
+
+    def list(self, request, pk=None):
+        # Get all posts
+        
+        posts = Post.objects.all()
+
         user_id = self.request.query_params.get('user_id', None)
 
         if user_id is not None:
-            user_posts = all_posts.filter()
-        
-        return user_posts
+            posts = posts.filter(rare_user__id=user_id)
+
+        serializer = PostSerializer(
+            posts, many=True, context={'request': request})
+        return Response(serializer.data)
