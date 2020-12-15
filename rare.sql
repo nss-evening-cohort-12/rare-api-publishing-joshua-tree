@@ -1,1 +1,1 @@
-SELECT * from auth_user
+SELECT * from rareapi_tag
