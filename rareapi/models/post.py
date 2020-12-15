@@ -6,7 +6,7 @@ from django.db.models.deletion import CASCADE
 
 class Post(models.Model):
     title = models.CharField(max_length=50)
-    publication_date = models.DateField(default=timezone.now)
+    publication_date = models.DateTimeField(default=timezone.now)
     image_url = models.ImageField(blank=True)
     content = models.CharField(max_length=2000)
     approved = models.BooleanField()

@@ -1,9 +1,10 @@
+import datetime
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseServerError
 from rest_framework import serializers, status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
-from rareapi.models import Post
+from rareapi.models import Post, Category, RareUser
 
 class PostSerializer(serializers.ModelSerializer):
     # JSON Serializer for Post
@@ -11,6 +12,7 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'url', 'title', 'publication_date', 'image_url', 'content', 'approved', 'rare_user', 'category']
+        depth = 1
 
 class PostsViewSet(ViewSet):
 
@@ -23,6 +25,29 @@ class PostsViewSet(ViewSet):
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
+
+    def create(self, request):
+        # Create a new post
+
+        rare_user = RareUser.objects.get(user=request.auth.user)
+
+        post = Post()
+        post.title = request.data['title']
+        post.publication_date = datetime.datetime.now()
+        post.image_url = request.data['image_url']
+        post.content = request.data['content']
+        post.approved = request.data['approved']
+        post.rare_user = rare_user.user
+
+        category = Category.objects.get(pk=request.data['category'])
+        post.category = category
+
+        try:
+            post.save()
+            serializer = PostSerializer(post, context={'request': request})
+            return Response(serializer.data)
+        except ValidationError as ex:
+            return Response({'reason': ex.message}, status=status.HTTP_400_BAD_REQUEST)
 
 
     def list(self, request, pk=None):
