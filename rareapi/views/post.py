@@ -8,6 +8,8 @@ from rareapi.models import Post, Category, RareUser
 
 class PostSerializer(serializers.ModelSerializer):
     # JSON Serializer for Post
+
+    model = Category
     
     class Meta:
         model = Post
