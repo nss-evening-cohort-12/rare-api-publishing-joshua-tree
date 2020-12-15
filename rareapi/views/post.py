@@ -1,3 +1,4 @@
+from rareapi.models.category import Category
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseServerError
 from rest_framework import serializers, status
@@ -7,10 +8,13 @@ from rareapi.models import Post
 
 class PostSerializer(serializers.ModelSerializer):
     # JSON Serializer for Post
+
+    model = Category
     
     class Meta:
         model = Post
         fields = ['id', 'url', 'title', 'publication_date', 'image_url', 'content', 'approved', 'rare_user', 'category']
+        depth = 1
 
 class PostsViewSet(ViewSet):
 
