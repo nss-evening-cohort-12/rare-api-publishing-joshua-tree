@@ -1,1 +1,1 @@
-SELECT * from rareapi_tag
+DELETE from rareapi_post
