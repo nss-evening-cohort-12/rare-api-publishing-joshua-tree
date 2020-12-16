@@ -1,4 +1,4 @@
-import datetime
+from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseServerError
 from rest_framework import serializers, status
@@ -17,7 +17,7 @@ class PostSerializer(serializers.ModelSerializer):
         depth = 1
 
 class PostsViewSet(ViewSet):
-
+    
     def retrieve(self, request, pk=None):
         # Get posts by pk (this is necessary for HyperLinkedSerializers)
 
@@ -35,7 +35,7 @@ class PostsViewSet(ViewSet):
 
         post = Post()
         post.title = request.data['title']
-        post.publication_date = datetime.datetime.now()
+        post.publication_date = timezone.now()
         post.image_url = request.data['image_url']
         post.content = request.data['content']
         post.approved = request.data['approved']
