@@ -60,14 +60,15 @@ class Comments(ViewSet):
 
 
     def retrieve(self, request, pk=None):
-        """Handle GET requests for single comment
+        """Handle GET requests for a single post's comments
 
         Returns:
-            Response -- JSON serialized comment instance
+            Response -- JSON serialized list
         """
         try:
-            comment = Comment.objects.get(pk=pk)
-            serializer = CommentSerializer(comment, context={'request': request})
+            comment = Comment.objects.filter(post=pk) 
+            # filter returns a list of everything that matches
+            serializer = CommentSerializer(comment, many=True, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
