@@ -7,5 +7,14 @@
           "bio": "Avid National Park explorer",
           "profile_image_url": ""
       }
-  }
+  },
+  {
+        "model": "rareapi.rareuser",
+        "pk": 2,
+        "fields": {
+            "user": 2,
+            "bio": "I consider myself to be very deep",
+            "profile_image_url": ""
+        }
+    }
 ]
