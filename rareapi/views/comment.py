@@ -1,6 +1,6 @@
 """View module for handling requests about comments"""
-from rareapi.models.post import Post
 from django.contrib.auth.models import User
+import datetime
 from django.core.exceptions import ValidationError
 from rest_framework import status
 from django.http import HttpResponseServerError
@@ -8,7 +8,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from rareapi.models import Comment, RareUser
+from rareapi.models import Comment, RareUser, Post
 
 class Comments(ViewSet):
     """Rare comments"""
@@ -25,9 +25,9 @@ class Comments(ViewSet):
         comment = Comment()
         comment.content = request.data["content"]
         comment.subject = request.data["subject"]
-        comment.created_on = request.data["createdOn"]
+        comment.created_on = datetime.datetime.now()
 
-        post = Post.objects.get(pk=request.data["postId"])
+        post = Post.objects.get(pk=request.data["post"])
         comment.post = post
         
         comment.author = author
@@ -82,6 +82,10 @@ class Comments(ViewSet):
         """
         comments = Comment.objects.all()
 
+        post = self.request.query_params.get('post', None)
+        if post is not None:
+            comments = comments.filter(post__id=post)
+
         serializer = CommentSerializer(
             comments, many=True, context={'request': request})
         return Response(serializer.data)
@@ -114,7 +118,7 @@ class CommentSerializer(serializers.ModelSerializer):
             lookup_field='id'
         )
         fields = ('id', 'url', 'content', 'subject', 'author', 'post', 'created_on')
-        depth = 1
+        # depth = 1
         
 class CommentUserSerializer(serializers.ModelSerializer):
     """JSON serializer for commenter's related Django user"""

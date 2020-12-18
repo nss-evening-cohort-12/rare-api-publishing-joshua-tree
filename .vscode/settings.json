@@ -1,6 +1,5 @@
 {
     "python.linting.pylintEnabled": true,
-    "python.pythonPath": "/Users/RyanBeiden/.local/share/virtualenvs/rare-A4UsOGCg/bin/python",
     "sqltools.connections": [
         {
             "previewLimit": 50,
