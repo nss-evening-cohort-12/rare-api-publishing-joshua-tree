@@ -1,1 +1,1 @@
-SELECT * from auth_user
+DELETE from rareapi_post
