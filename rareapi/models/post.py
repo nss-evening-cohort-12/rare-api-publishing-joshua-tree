@@ -1,6 +1,5 @@
-import os
+import uuid
 from django.db import models
-from django.db.models.expressions import Case
 from django.utils import timezone
 from django.conf import settings
 from django.db.models.deletion import CASCADE
@@ -9,10 +8,7 @@ from django.utils.translation import gettext_lazy as _
 class Post(models.Model):
 
     def upload_to(instance, filename):
-        now = timezone.now()
-        base, extension = os.path.splitext(filename.lower())
-        milliseconds = now.microsecond // 1000
-        return f"posts/{instance.rare_user}/{now:%Y%m%d%H%M%S}{milliseconds}{extension}"
+        return f"posts/{instance.rare_user.id}-{uuid.uuid4()}"
     
     title = models.CharField(max_length=50)
     publication_date = models.DateTimeField(default=timezone.now)

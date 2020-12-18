@@ -1,6 +1,8 @@
+import base64
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseServerError
+from django.core.files.base import ContentFile
 from rest_framework import serializers, status
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
@@ -33,10 +35,15 @@ class PostsViewSet(ViewSet):
 
         rare_user = RareUser.objects.get(user=request.auth.user)
 
+        # Format post image
+        format, imgstr = request.data['image_url'].split(';base64,')
+        ext = format.split('/')[-1]
+        image_data = ContentFile(base64.b64decode(imgstr), name=f'.{ext}')
+
         post = Post()
         post.title = request.data['title']
         post.publication_date = timezone.now()
-        post.image_url = request.data['image_url']
+        post.image_url = image_data
         post.content = request.data['content']
         post.approved = request.data['approved']
         post.rare_user = rare_user.user
