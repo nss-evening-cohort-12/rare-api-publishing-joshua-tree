@@ -118,7 +118,7 @@ class CommentSerializer(serializers.ModelSerializer):
             lookup_field='id'
         )
         fields = ('id', 'url', 'content', 'subject', 'author', 'post', 'created_on')
-        # depth = 1
+        depth = 1
         
 class CommentUserSerializer(serializers.ModelSerializer):
     """JSON serializer for commenter's related Django user"""
