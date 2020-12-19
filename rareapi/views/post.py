@@ -49,7 +49,7 @@ class PostsViewSet(ViewSet):
         post.image_url = image_data
         post.content = request.data['content']
         post.approved = request.data['approved']
-        post.rare_user = rare_user.user
+        post.rare_user = rare_user
 
         category = Category.objects.get(pk=request.data['category'])
         post.category = category
@@ -99,7 +99,32 @@ class PostsViewSet(ViewSet):
             if os.path.isfile(instance.image_url.path):
                 os.remove(instance.image_url.path)
 
-    
+
+    def update(self, request, pk=None):
+        # Update post
+
+        rare_user = RareUser.objects.get(user=request.auth.user)
+
+        # Format post image
+        format, imgstr = request.data['image_url'].split(';base64,')
+        ext = format.split('/')[-1]
+        image_data = ContentFile(base64.b64decode(imgstr), name=f'.{ext}')
+
+        post = Post.objects.get(pk=pk)
+        post.title = request.data['title']
+        post.publication_date = request.data['publication_date']
+        post.image_url = image_data
+        post.content = request.data['content']
+        post.approved = request.data['approved']
+        post.rare_user = rare_user
+
+        category = Category.objects.get(pk=request.data['category'])
+        post.category = category
+        post.save()
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+
     @receiver(models.signals.pre_save, sender=Post)
     def auto_delete_file_on_change(sender, instance, **kwargs):
         # Deletes old file from filesystem when corresponding `Post` object is updated with new file.
