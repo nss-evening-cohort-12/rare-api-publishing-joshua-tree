@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
-# from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from rareapi.models import RareUser
 
@@ -20,7 +19,7 @@ def login_user(request):
         password = req_body['password']
         authenticated_user = authenticate(username=username, password=password)
 
-        # If authentication was successful, respond with their token
+        # If authentication was successful, respond with their token & user_id
         if authenticated_user is not None:
             token = Token.objects.get(user=authenticated_user)
             data = json.dumps({"valid": True, "token": token.key, "user_id": token.user_id})
@@ -63,6 +62,6 @@ def register_user(request):
     # Use the REST Framework's token generator on the new user account
     token = Token.objects.create(user=new_user)
 
-    # Return the token to the client
-    data = json.dumps({"token": token.key})
+    # Return the token and user_id to the client
+    data = json.dumps({"token": token.key, "user_id": token.user_id})
     return HttpResponse(data, content_type='application/json')
