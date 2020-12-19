@@ -1,11 +1,14 @@
+import os
 import base64
+from django.db import models
 from django.utils import timezone
-from django.core.exceptions import ValidationError
+from django.dispatch import receiver
 from django.http import HttpResponseServerError
 from django.core.files.base import ContentFile
-from rest_framework import serializers, status
+from django.core.exceptions import ValidationError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
+from rest_framework import serializers, status
 from rareapi.models import Post, Category, RareUser
 
 class PostSerializer(serializers.ModelSerializer):
@@ -86,3 +89,12 @@ class PostsViewSet(ViewSet):
 
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+    @receiver(models.signals.post_delete, sender=Post)
+    def auto_delete_file_on_delete(sender, instance, **kwargs):
+        # Deletes file from filesystem when corresponding `Post` object is deleted.
+
+        if instance.image_url:
+            if os.path.isfile(instance.image_url.path):
+                os.remove(instance.image_url.path)
