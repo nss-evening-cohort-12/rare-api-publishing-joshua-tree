@@ -10,7 +10,7 @@ from rest_framework import serializers
 from rest_framework import status
 from rareapi.models import Comment, RareUser, Post
 
-class Comments(ViewSet):
+class EditComments(ViewSet):
     """Rare comments"""
 
     def create(self, request):
@@ -34,41 +34,22 @@ class Comments(ViewSet):
 
         try:
             comment.save()
-            serializer = CommentSerializer(comment, context={'request': request})
+            serializer = EditCommentSerializer(comment, context={'request': request})
             return Response(serializer.data)
 
         except ValidationError as ex:
             return Response({"reason": ex.message}, status=status.HTTP_400_BAD_REQUEST)
 
-    def destroy(self, request, pk=None):
-        """Handle DELETE requests for a single comment
+
+    def retrieve(self, request, pk=None):
+        """Handle GET requests for single comment
 
         Returns:
-            Response -- 200, 404, or 500 status code
+            Response -- JSON serialized comment instance
         """
         try:
             comment = Comment.objects.get(pk=pk)
-            comment.delete()
-
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
-
-        except Comment.DoesNotExist as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
-
-        except Exception as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-    def retrieve(self, request, pk=None):
-        """Handle GET requests for a single post's comments
-
-        Returns:
-            Response -- JSON serialized list
-        """
-        try:
-            comment = Comment.objects.filter(post=pk) 
-            # filter returns a list of everything that matches
-            serializer = CommentSerializer(comment, many=True, context={'request': request})
+            serializer = EditCommentSerializer(comment, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -86,26 +67,26 @@ class Comments(ViewSet):
         if post is not None:
             comments = comments.filter(post__id=post)
 
-        serializer = CommentSerializer(
+        serializer = EditCommentSerializer(
             comments, many=True, context={'request': request})
         return Response(serializer.data)
 
-    # def update(self, request, pk=None):
-    #     """Handle PUT requests for a comment
+    def update(self, request, pk=None):
+        """Handle PUT requests for a comment
 
-    #     Returns:
-    #         Response -- Empty body with 204 status code
-    #     """
-    #     comment = Comment.objects.get(pk=pk)
-    #     comment.subject = request.data["subject"]
-    #     comment.content = request.data["content"]
+        Returns:
+            Response -- Empty body with 204 status code
+        """
+        comment = Comment.objects.get(pk=pk)
+        comment.subject = request.data["subject"]
+        comment.content = request.data["content"]
     
-    #     comment.save()
+        comment.save()
 
-    #     return Response({}, status=status.HTTP_204_NO_CONTENT)
+        return Response('here is a string', status=status.HTTP_204_NO_CONTENT)
 
 
-class CommentSerializer(serializers.ModelSerializer):
+class EditCommentSerializer(serializers.ModelSerializer):
     """JSON serializer for comments
 
     Arguments:
@@ -114,23 +95,19 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        url = serializers.HyperlinkedIdentityField(
-            view_name='comment',
-            lookup_field='id'
-        )
-        fields = ('id', 'url', 'content', 'subject', 'author', 'post', 'created_on')
+        fields = ('id', 'content', 'subject', 'author', 'post', 'created_on')
         depth = 1
         
-class CommentUserSerializer(serializers.ModelSerializer):
+class EditCommentUserSerializer(serializers.ModelSerializer):
     """JSON serializer for commenter's related Django user"""
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
 
 
-class CommentRareUserSerializer(serializers.ModelSerializer):
+class EditCommentRareUserSerializer(serializers.ModelSerializer):
     """JSON serializer for commenter's rare user"""
-    user = CommentUserSerializer(many=False)
+    user = EditCommentUserSerializer(many=False)
 
     class Meta:
         model = RareUser
