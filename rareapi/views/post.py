@@ -1,11 +1,14 @@
+import os
 import base64
+from django.db import models
 from django.utils import timezone
-from django.core.exceptions import ValidationError
+from django.dispatch import receiver
 from django.http import HttpResponseServerError
 from django.core.files.base import ContentFile
-from rest_framework import serializers, status
+from django.core.exceptions import ValidationError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
+from rest_framework import serializers, status
 from rareapi.models import Post, Category, RareUser
 
 class PostSerializer(serializers.ModelSerializer):
@@ -46,7 +49,7 @@ class PostsViewSet(ViewSet):
         post.image_url = image_data
         post.content = request.data['content']
         post.approved = request.data['approved']
-        post.rare_user = rare_user.user
+        post.rare_user = rare_user
 
         category = Category.objects.get(pk=request.data['category'])
         post.category = category
@@ -86,3 +89,55 @@ class PostsViewSet(ViewSet):
 
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+    @receiver(models.signals.post_delete, sender=Post)
+    def auto_delete_file_on_delete(sender, instance, **kwargs):
+        # Deletes file from filesystem when corresponding `Post` object is deleted.
+
+        if instance.image_url:
+            if os.path.isfile(instance.image_url.path):
+                os.remove(instance.image_url.path)
+
+
+    def update(self, request, pk=None):
+        # Update post
+
+        rare_user = RareUser.objects.get(user=request.auth.user)
+
+        # Format post image
+        format, imgstr = request.data['image_url'].split(';base64,')
+        ext = format.split('/')[-1]
+        image_data = ContentFile(base64.b64decode(imgstr), name=f'.{ext}')
+
+        post = Post.objects.get(pk=pk)
+        post.title = request.data['title']
+        post.publication_date = request.data['publication_date']
+        post.image_url = image_data
+        post.content = request.data['content']
+        post.approved = request.data['approved']
+        post.rare_user = rare_user
+
+        category = Category.objects.get(pk=request.data['category'])
+        post.category = category
+        post.save()
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+
+    @receiver(models.signals.pre_save, sender=Post)
+    def auto_delete_file_on_change(sender, instance, **kwargs):
+        # Deletes old file from filesystem when corresponding `Post` object is updated with new file.
+
+        if not instance.pk:
+            return False
+
+        try:
+            old_file = Post.objects.get(pk=instance.pk).image_url
+        except Post.DoesNotExist:
+            return False
+
+        new_file = instance.image_url
+        if not old_file == new_file:
+            if os.path.isfile(old_file.path):
+                os.remove(old_file.path)
