@@ -5,8 +5,8 @@
       "fields": {
           "password": "password",
           "last_login": null,
-          "is_superuser": false,
-          "username": "me@me.com",
+          "is_superuser": true,
+          "username": "JoshuaTree",
           "first_name": "Joshua",
           "last_name": "Tree",
           "email": "me@me.com",

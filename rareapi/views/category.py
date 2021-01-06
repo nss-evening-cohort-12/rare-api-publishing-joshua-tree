@@ -18,7 +18,7 @@ class CategoriesViewSet(ViewSet):
     """
     try:
       category = Category.objects.get(pk=pk)
-      serializer = CategorySerializer(category, context={'request': request})
+      serializer = CategoryPostsSerializer(category, context={'request': request})
       return Response(serializer.data)
     except Exception as ex:
       return HttpResponseServerError(ex)
@@ -97,3 +97,15 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
     model = Category
     fields = ('id', 'url', 'label')
+
+  
+class CategoryPostsSerializer(serializers.ModelSerializer):
+  """JSON Serializer for categories
+
+  Arguments:
+    serializers
+  """
+  class Meta:
+    model = Category
+    fields = ('id', 'url', 'label', 'posts')
+    depth = 1
