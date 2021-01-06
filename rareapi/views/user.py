@@ -11,6 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = RareUser
         fields = ['id', 'user', 'bio', 'display_name', 'profile_image_url']
+        depth = 1
 
 class UsersViewSet(ViewSet):
 
