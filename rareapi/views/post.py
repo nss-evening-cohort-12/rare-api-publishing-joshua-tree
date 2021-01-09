@@ -103,7 +103,7 @@ class PostsViewSet(ViewSet):
     def update(self, request, pk=None):
         # Update post
 
-        rare_user = RareUser.objects.get(user=request.auth.user)
+        rare_user = RareUser.objects.get(user=request.data['rare_user'])
         image_data = ''
 
         # Check for an image update
