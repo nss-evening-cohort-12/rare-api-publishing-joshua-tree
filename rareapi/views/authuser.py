@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'is_staff', 'is_active']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'is_staff', 'password', 'is_active']
 
 class AuthUserViewSet(viewsets.ModelViewSet):
     """
