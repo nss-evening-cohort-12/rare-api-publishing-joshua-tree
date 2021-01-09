@@ -6,3 +6,4 @@ from .tag import Tags
 from .post import PostsViewSet
 from .user import UsersViewSet
 from .editcomment import EditComments
+from .authuser import AuthUserViewSet
