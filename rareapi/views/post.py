@@ -103,12 +103,21 @@ class PostsViewSet(ViewSet):
     def update(self, request, pk=None):
         # Update post
 
-        rare_user = RareUser.objects.get(user=request.auth.user)
+        rare_user = RareUser.objects.get(user=request.data['rare_user'])
+        image_data = ''
 
-        # Format post image
-        format, imgstr = request.data['image_url'].split(';base64,')
-        ext = format.split('/')[-1]
-        image_data = ContentFile(base64.b64decode(imgstr), name=f'.{ext}')
+        # Check for an image update
+        post_image = Post.objects.get(pk=pk).image_url.name
+        image_path = request.data['image_url'].split('media/')
+        
+        if image_path[-1] == post_image:
+            image_data = image_path[1]
+
+        # Format new post image
+        elif request.data['image_url']:
+            format, imgstr = request.data['image_url'].split(';base64,')
+            ext = format.split('/')[-1]
+            image_data = ContentFile(base64.b64decode(imgstr), name=f'.{ext}')
 
         post = Post.objects.get(pk=pk)
         post.title = request.data['title']
