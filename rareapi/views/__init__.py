@@ -7,3 +7,4 @@ from .post import PostsViewSet
 from .user import UsersViewSet
 from .editcomment import EditComments
 from .authuser import AuthUserViewSet
+from .subscription import SubscriptionViewSet

@@ -5,7 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rareapi.views import login_user, register_user
 from rest_framework import routers
-from rareapi.views import CategoriesViewSet, Tags, Comments, PostsViewSet, UsersViewSet, EditComments, AuthUserViewSet
+from rareapi.views import CategoriesViewSet, Tags, Comments, PostsViewSet, UsersViewSet, EditComments, AuthUserViewSet, SubscriptionViewSet
 
 
 router = routers.DefaultRouter(trailing_slash=False)
@@ -16,6 +16,7 @@ router.register(r'editcomments', EditComments, 'editcomment')
 router.register(r'posts', PostsViewSet, 'post')
 router.register(r'users', UsersViewSet, 'user')
 router.register(r'authusers', AuthUserViewSet, 'authuser')
+router.register(r'subscriptions', SubscriptionViewSet, 'subscription')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
