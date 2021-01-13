@@ -1,2 +1,3 @@
-UPDATE rareapi_post
-SET rare_user_id = 4
+UPDATE auth_user
+SET is_active = true
+WHERE id = 1
