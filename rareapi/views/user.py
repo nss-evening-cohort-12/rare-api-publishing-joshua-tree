@@ -32,13 +32,18 @@ class UsersViewSet(ViewSet):
         
         users = RareUser.objects.all()
 
+        status = self.request.query_params.get('is_active', None)
+        if status is not None:
+            users = users.filter(user__is_active=status)
+
         serializer = UserSerializer(
             users, many=True, context={'request': request})
         return Response(serializer.data)
 
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    A viewset for viewing and editing user instances.
-    """
-    serializer_class = UserSerializer
-    queryset = User.objects.all()
+
+# class UserViewSet(viewsets.ModelViewSet):
+#     """
+#     A viewset for viewing and editing user instances.
+#     """
+#     serializer_class = UserSerializer
+#     queryset = User.objects.all()
