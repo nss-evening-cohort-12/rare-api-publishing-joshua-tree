@@ -5,6 +5,7 @@
       "fields": {
           "user": 1,
           "bio": "Avid National Park explorer",
+          "display_name": "JoshuaTree",
           "profile_image_url": ""
       }
   },
@@ -14,6 +15,7 @@
         "fields": {
             "user": 2,
             "bio": "I consider myself to be very deep",
+            "display_name": "JoshuaTree",
             "profile_image_url": ""
         }
     }

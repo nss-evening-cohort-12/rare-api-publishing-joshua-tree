@@ -7,3 +7,5 @@ class RareUser(models.Model):
     bio = models.CharField(max_length=500)
     display_name = models.CharField(max_length=25, null=True)
     profile_image_url = models.ImageField(blank=True)
+    class Meta:
+        ordering = ["display_name"]
