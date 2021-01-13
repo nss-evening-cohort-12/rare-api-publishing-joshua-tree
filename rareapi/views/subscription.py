@@ -41,12 +41,13 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
         # Create a new subscription
 
         follower_id = RareUser.objects.get(user=request.auth.user)
+        author_id = RareUser.objects.get(user=request.data['author_id'])
 
         subscription = Subscription()
         subscription.created_on = timezone.now()
-        subscription.ended_on = ''
+        subscription.ended_on = request.data['ended_on']
         subscription.follower_id = follower_id
-        subscription.author_id = request.data['author_id']
+        subscription.author_id = author_id
 
         try:
             subscription.save()

@@ -4,7 +4,7 @@ from django.db.models.deletion import CASCADE
 
 class Subscription(models.Model):
     created_on = models.DateTimeField(default=timezone.now)
-    ended_on = models.DateTimeField(blank=True)
+    ended_on = models.DateTimeField(null=True)
     follower_id = models.ForeignKey("RareUser", 
         on_delete=CASCADE,
         related_name="follower_subscriptions",

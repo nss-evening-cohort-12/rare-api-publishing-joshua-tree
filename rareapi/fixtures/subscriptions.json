@@ -15,7 +15,7 @@
         "fields": {
             "created_on": "2021-01-02T03:13:56.670856Z",
             "ended_on": "2021-01-22T03:13:56.670856Z",
-            "follower_id": 3,
+            "follower_id": 2,
             "author_id": 1
         }
     },
@@ -25,8 +25,8 @@
         "fields": {
             "created_on": "2021-01-02T03:13:56.670856Z",
             "ended_on": "2021-01-22T03:13:56.670856Z",
-            "follower_id": 5,
-            "author_id": 4
+            "follower_id": 1,
+            "author_id": 2
         }
     }
   ]
