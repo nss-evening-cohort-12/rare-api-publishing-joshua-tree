@@ -1,6 +1,7 @@
 from rest_framework import status, viewsets, serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.viewsets import ViewSet
 from django.utils import timezone
 from django.http import HttpResponseServerError
 from django.core.exceptions import ValidationError
@@ -13,10 +14,10 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         model = Subscription
         fields = ['id', 'created_on', 'ended_on', 'follower_id', 'author_id']
 
-class SubscriptionViewSet(viewsets.ModelViewSet):
+class SubscriptionViewSet(ViewSet):
 
     def retrieve(self, request, pk=None):
-    # Get subscriptions by pk (this is necessary for HyperLinkedSerializers)
+        # Get subscriptions by pk
 
         try:
             post = Subscription.objects.get(pk=pk)
@@ -56,3 +57,29 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
 
         except ValidationError as ex:
             return Response({'reason': ex.message}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    
+    def update(self, request, pk=None):
+        # Update a subscription
+
+        follower_id = RareUser.objects.get(user=request.auth.user)
+        author_id = RareUser.objects.get(user=request.data['author_id'])
+        created_on = request.data['created_on']
+        ended_on = request.data['ended_on']
+        
+        subscription = Subscription.objects.get(pk=pk)
+        subscription.follower_id = follower_id
+        subscription.author_id = author_id
+
+        if created_on is not None:
+            subscription.created_on = request.data['created_on']
+            subscription.ended_on = timezone.now()
+
+        elif ended_on is not None:
+            subscription.created_on = timezone.now()
+            subscription.ended_on = request.data['ended_on']
+
+        subscription.save()
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
