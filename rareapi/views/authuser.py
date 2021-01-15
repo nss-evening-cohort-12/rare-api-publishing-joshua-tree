@@ -17,3 +17,11 @@ class AuthUserViewSet(viewsets.ModelViewSet):
     """
     serializer_class = UserSerializer
     queryset = User.objects.all()
+
+    def get_queryset(self):
+
+        queryset = User.objects.all()
+        status = self.request.query_params.get('is_active', None)
+        if status is not None:
+            queryset = queryset.filter(is_active=status)
+        return queryset
