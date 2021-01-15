@@ -13,6 +13,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscription
         fields = ['id', 'created_on', 'ended_on', 'follower_id', 'author_id']
+        depth = 1
 
 class SubscriptionViewSet(ViewSet):
 
@@ -20,20 +21,26 @@ class SubscriptionViewSet(ViewSet):
         # Get subscriptions by pk
 
         try:
-            post = Subscription.objects.get(pk=pk)
-            serializer = SubscriptionSerializer(post, context={'request': request})
+            subscription = Subscription.objects.get(pk=pk)
+            serializer = SubscriptionSerializer(subscription, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
 
 
-    def list(self, request):
+    def list(self, request, pk=None):
         # Get all subscriptions
         
-        posts = Subscription.objects.all()
+        subscriptions = Subscription.objects.all()
+        # users = RareUser.objects.all()
+
+        subscriber = self.request.query_params.get('follower_id', None)
+        
+        if subscriber is not None:
+            subscriptions = subscriptions.filter(follower_id__id=subscriber)
 
         serializer = SubscriptionSerializer(
-            posts, many=True, context={'request': request})
+            subscriptions, many=True, context={'request': request})
         
         return Response(serializer.data)
 

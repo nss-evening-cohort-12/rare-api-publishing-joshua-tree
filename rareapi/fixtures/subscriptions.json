@@ -28,5 +28,15 @@
             "follower_id": 1,
             "author_id": 2
         }
+    },
+    {
+        "model": "rareapi.subscription",
+        "pk": 4,
+        "fields": {
+            "created_on": "2021-01-02T03:13:56.670856Z",
+            "ended_on": "2021-01-22T03:13:56.670856Z",
+            "follower_id": 3,
+            "author_id": 2
+        }
     }
   ]
