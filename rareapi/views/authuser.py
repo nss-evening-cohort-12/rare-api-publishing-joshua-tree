@@ -22,6 +22,9 @@ class AuthUserViewSet(viewsets.ModelViewSet):
 
         queryset = User.objects.all()
         status = self.request.query_params.get('is_active', None)
+        staff = self.request.query_params.get('is_staff', None)
         if status is not None:
             queryset = queryset.filter(is_active=status)
+        elif staff is not None:
+            queryset = queryset.filter(is_staff=staff)
         return queryset
