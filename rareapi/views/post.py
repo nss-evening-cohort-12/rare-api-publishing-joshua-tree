@@ -84,7 +84,9 @@ class PostsViewSet(ViewSet):
         user_id = self.request.query_params.get('user_id', None)
 
         if user_id is not None:
-            posts = posts.filter(rare_user__id=user_id)
+            if "," in user_id:
+                user_id = user_id.split(",")  
+            posts = posts.filter(rare_user__id__in=user_id)
 
         serializer = PostSerializer(
             posts, many=True, context={'request': request})
