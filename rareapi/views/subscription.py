@@ -34,6 +34,13 @@ class SubscriptionViewSet(ViewSet):
         subscriptions = Subscription.objects.all()
         # users = RareUser.objects.all()
 
+        author_id = self.request.query_params.get('author_id', None)
+        follower_id = self.request.query_params.get('follower_id', None)
+
+        if author_id is not None and follower_id is not None:
+            author_subscriptions = subscriptions.filter(author_id_id=author_id)
+            subscriptions = author_subscriptions.filter(follower_id_id=follower_id)
+
         subscriber = self.request.query_params.get('follower_id', None)
         
         if subscriber is not None:
