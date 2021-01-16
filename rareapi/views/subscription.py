@@ -30,10 +30,17 @@ class SubscriptionViewSet(ViewSet):
     def list(self, request):
         # Get all subscriptions
         
-        posts = Subscription.objects.all()
+        subscriptions = Subscription.objects.all()
+
+        author_id = self.request.query_params.get('author_id', None)
+        follower_id = self.request.query_params.get('follower_id', None)
+
+        if author_id is not None and follower_id is not None:
+            author_subscriptions = subscriptions.filter(author_id_id=author_id)
+            subscriptions = author_subscriptions.filter(follower_id_id=follower_id)
 
         serializer = SubscriptionSerializer(
-            posts, many=True, context={'request': request})
+            subscriptions, many=True, context={'request': request})
         
         return Response(serializer.data)
 
